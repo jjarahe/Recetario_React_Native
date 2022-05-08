@@ -22,7 +22,6 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             })
             return;
         }
-        
         try {
             const auth = getAuth();
             await createUserWithEmailAndPassword(auth, value.email, value.password);
