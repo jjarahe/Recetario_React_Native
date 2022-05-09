@@ -9,9 +9,10 @@ const CreateRecipe = () => {
     const { user } = useAuthentication();
     
     const [recipe, setRecipe] = useState({
-        name: '',
-        detail: ''
-    })
+                                            name: '',
+                                            detail: ''
+                                        }
+    )
     
     const saveNewRecipe = async () => {
         const db = getDatabase();
@@ -19,7 +20,7 @@ const CreateRecipe = () => {
         if(recipe.name === ''){
             alert('Please provide a Recipe name')
         } else {
-            const reference = ref(db, 'users/' + 'Juan' );
+            const reference = ref(db, 'recipies/' + 'Juan' );
             set(reference, {...recipe});
         }
         
