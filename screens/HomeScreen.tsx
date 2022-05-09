@@ -28,6 +28,3 @@ const styles = StyleSheet.create({
       marginTop: 10
   }
 });
-function auth(auth: any): void {
-    throw new Error('Function not implemented.');
-}
