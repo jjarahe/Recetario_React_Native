@@ -11,9 +11,8 @@ export default function UserStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Create Recipe" component={CreateRecipe} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Create Recipe" component={CreateRecipe} />
       </Stack.Navigator>
     </NavigationContainer>
   );
