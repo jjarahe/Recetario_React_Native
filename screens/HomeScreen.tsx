@@ -1,72 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-native-elements'
+//import { Button, ListItem, Avatar } from 'react-native-elements'
+import { ListItem, Button, Avatar } from "react-native-elements";
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import { getAuth, signOut } from 'firebase/auth';
-import { StyleSheet, Text, View, SafeAreaView, SectionList, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, } from 'react-native';
 import { getDatabase, ref, child, get, } from 'firebase/database'; 
+import { ScrollView } from 'react-native-gesture-handler';
+import Card from '../components/Card';
 
 export default function HomeScreen(props) {
     const auth = getAuth();
     auth.currentUser?.uid
     const { user } = useAuthentication();
-    const [recipies, setRecipies] = useState<Array<object> | null>([]);
-    let recipeList = [];
+    const [recipies, setRecipies] = useState<Array<{id: string, name:string; detail:string}>>([]);
+    let recipeListDummy = [];
+    let recipeList: Array<{id: string, name:string; detail:string}> = [];
     
     useEffect(()=> {
         const db = getDatabase();
         const dbRef = ref(db);
         get(child(dbRef, `${auth.currentUser?.uid}/recipies`)).then((snapshot) => {
             if(snapshot.exists()){
-                console.log(snapshot.val());
-                recipeList = Object.entries(snapshot.val());
-                setRecipies( recipeList );
-                console.log("Lista de recetas", recipeList);
-                console.log("Lista de recetas State", recipies);
+                recipeListDummy = Object.entries(snapshot.val());
+                recipeListDummy.forEach(recipe => {
+                    recipeList.push({ id: recipe[0], name: recipe[1].name, detail: recipe[1].detail})
+                })
+                setRecipies( recipeList);
+                console.log("Lista de recetas State", recipeList);
             } else {
                 console.log('No data available');
             }
         }).catch( (error) => {
             console.error(error)
         })
-    },[])
+    },[]);
     
-    
-    const DATA = [
-        {
-          title: 'Main dishes',
-          data: ['Pizza', 'Burger', 'Risotto'],
-        },
-        {
-          title: 'Sides',
-          data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
-        },
-      ];
-      
-      const Item = ({ title }) => (
-        <View style={styles.item}>
-          <Text style={styles.title}>{title}</Text>
-        </View>
-     
-      );
-    
+    const onCardSelected = () => {
+        alert('click')
+    }
   return (
       
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
                 
                 <Text style= {styles.userData}>Welcome {user?.email}!</Text>
                 <Button title='Create Recipe' style={styles.button} onPress={()=> props.navigation.navigate('Create Recipe')}/>
                 
-                <SectionList
-                  sections={DATA}
-                  keyExtractor={(item, index) => item + index}
-                  renderItem={({ item }) => <Item title={item} />}
-                  renderSectionHeader={({ section: { title } }) => <Text style={styles.header}>{title}</Text>}
-                />
+               {
+                  
+                   recipies.map((recipe) => {
+                    return ( 
+                    <ListItem
+                       key={recipe.id}
+                       bottomDivider
+                     >
+                         <Card id={recipe.id} name={recipe.name} detail={recipe.detail} onPress={onCardSelected}/>
+                     </ListItem>
+                     );
+                    })
+               }
                
                 
                 <Button title='Sign Out' style={styles.button} onPress={() => signOut(auth)}/>
 
-      </View>
+      </ScrollView>
     
   );
 }
@@ -76,20 +72,6 @@ const styles = StyleSheet.create({
    flex: 1,
    backgroundColor: '#fff',
    padding: 30
-  },
-  button: {
-      marginTop: 10
-  },
-  item: {
-    padding: 5,
-    marginVertical: 1,
-  },
-  header: {
-    fontSize: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 15,
   },
   userData: {
     backgroundColor: '#fff',
