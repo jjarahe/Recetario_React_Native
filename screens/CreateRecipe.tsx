@@ -19,8 +19,8 @@ const CreateRecipe = (props) => {
         const db = getDatabase();
         //const dbStore = getFirestore();
         
-        if(recipe.name === ''){
-            setError('Please provide a recipe name')
+        if(recipe.name === '' || recipe.detail === ''){
+            setError('Recipe name and detail should not be empty!')
         } else {
             try {
                 const reference = ref(db, `${user?.uid}/recipies`);

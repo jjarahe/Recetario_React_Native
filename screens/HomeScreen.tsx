@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ListItem, Avatar } from "react-native-elements";
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import { getAuth, signOut } from 'firebase/auth';
-import { StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View, Button, ActivityIndicator} from 'react-native';
 import { getDatabase, ref, child, get, } from 'firebase/database'; 
 import { ScrollView } from 'react-native-gesture-handler';
 import Card from '../components/Card';
@@ -13,11 +13,13 @@ export default function HomeScreen(props) {
     
     const { user } = useAuthentication();
     const [recipies, setRecipies] = useState<Array<{id: string, name:string; detail:string}>>([]);
+    const [loading, setLoading] = useState(true)
+
     let recipeListDummy = [];
     let recipeList: Array<{id: string, name:string; detail:string}> = [];
     
-    
-    useEffect(()=> {
+    useEffect( () => {
+        console.log("HOME HOME")
         const db = getDatabase();
         const dbRef = ref(db);
         get(child(dbRef, `${auth.currentUser?.uid}/recipies`)).then((snapshot) => {
@@ -33,17 +35,24 @@ export default function HomeScreen(props) {
         }).catch( (error) => {
             console.error(error)
         })
+        setLoading(false);
     },[recipies]);
    
+    if(loading){
+        return (
+            <View>
+                <ActivityIndicator size='large' color='#9e9e9e'/>
+            </View>
+        );
+    }
+    
   return (
-      
       <ScrollView style={styles.container}>
                 
                 <Text style= {styles.userData}>Welcome {user?.email}!</Text>
                 <Button title='Create Recipe' style={styles.button} onPress={()=> props.navigation.navigate('Create Recipe')}/>
                 
                {
-                  
                    recipies.map((recipe) => {
                     return ( 
                     <ListItem

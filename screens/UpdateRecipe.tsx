@@ -13,7 +13,6 @@ const UpdateRecipe = (props) => {
     let recipeList = {id: '', name:'', detail:''};
     
     useEffect(() => {
-    
         const db = getDatabase();
         const dbRef = ref(db);
         get(child(dbRef, `${auth.currentUser?.uid}/recipies/${props.route.params.id}`)).then((snapshot) => {
@@ -49,8 +48,8 @@ const UpdateRecipe = (props) => {
     
     const updateRecipe = async () => {
         const db = getDatabase(); 
-        if(recipe.name === ''){
-            setError('Please provide a recipe name')
+        if(recipe.name === '' || recipe.detail === ''){
+            setError('Recipe name and detail should not be empty!')
         } else {
             try {
                 const reference = ref(db, `${auth.currentUser?.uid}/recipies/${props.route.params.id}`);
