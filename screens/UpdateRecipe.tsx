@@ -86,7 +86,7 @@ const UpdateRecipe = (props) => {
                 <Button color='green' title="Update Recipe" onPress={()=> updateRecipe()}/>    
             </View>   
             <View style={styles.button}>
-                <Button color='#E37399'  title="Delete Recipe" onPress={()=> deleteRecipe()}/>    
+                <Button color='red'  title="Delete Recipe" onPress={()=> deleteRecipe()}/>    
             </View>
         </ScrollView>
     );
