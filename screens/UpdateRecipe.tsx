@@ -23,7 +23,7 @@ const UpdateRecipe = (props) => {
                 recipeList = { id: props.route.params.id, name: recipeDummy.name, detail: recipeDummy.detail}
 
                 setRecipe( recipeList );
-                console.log("Receta a actualizar", recipeList);
+               
             } else {
                 console.log('No data available');
             }

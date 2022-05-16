@@ -33,7 +33,7 @@ export default function HomeScreen(props) {
         }).catch( (error) => {
             console.error(error)
         })
-    },[]);
+    },[recipies]);
    
   return (
       
