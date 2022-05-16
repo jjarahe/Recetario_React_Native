@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 //import { Button, ListItem, Avatar } from 'react-native-elements'
-import { ListItem, Button, Avatar } from "react-native-elements";
+import { ListItem, Avatar } from "react-native-elements";
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import { getAuth, signOut } from 'firebase/auth';
-import { StyleSheet, Text, View, } from 'react-native';
+import { StyleSheet, Text, View, Button} from 'react-native';
 import { getDatabase, ref, child, get, } from 'firebase/database'; 
 import { ScrollView } from 'react-native-gesture-handler';
 import Card from '../components/Card';
 
 export default function HomeScreen(props) {
     const auth = getAuth();
-    auth.currentUser?.uid
+    
     const { user } = useAuthentication();
     const [recipies, setRecipies] = useState<Array<{id: string, name:string; detail:string}>>([]);
     let recipeListDummy = [];
     let recipeList: Array<{id: string, name:string; detail:string}> = [];
+    
     
     useEffect(()=> {
         const db = getDatabase();
@@ -26,7 +27,6 @@ export default function HomeScreen(props) {
                     recipeList.push({ id: recipe[0], name: recipe[1].name, detail: recipe[1].detail})
                 })
                 setRecipies( recipeList);
-                console.log("Lista de recetas State", recipeList);
             } else {
                 console.log('No data available');
             }
@@ -34,10 +34,7 @@ export default function HomeScreen(props) {
             console.error(error)
         })
     },[]);
-    
-    const onCardSelected = () => {
-        alert('click')
-    }
+   
   return (
       
       <ScrollView style={styles.container}>
@@ -53,15 +50,15 @@ export default function HomeScreen(props) {
                        key={recipe.id}
                        bottomDivider
                      >
-                         <Card id={recipe.id} name={recipe.name} detail={recipe.detail} onPress={onCardSelected}/>
+                         <Card id={recipe.id} name={recipe.name} detail={recipe.detail} onPress={()=> {props.navigation.navigate('Update Recipe', { id: recipe.id })}}/>
                      </ListItem>
                      );
                     })
                }
                
-                
-                <Button title='Sign Out' style={styles.button} onPress={() => signOut(auth)}/>
-
+                <View style={styles.button}>
+                    <Button color='red' title='Sign Out'  onPress={() => signOut(auth)}/>
+                </View>
       </ScrollView>
     
   );
@@ -79,6 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: 15 
   },
   button: {
-      padding: 10
+      padding: 10,
+      margin: 30
   }
 });
